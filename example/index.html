@@ -1,26 +1,29 @@
-    
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Dots Workbench</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-	<link href="https://fonts.googleapis.com/css?family=Inconsolata|Indie+Flower|Open+Sans|Quicksand" rel="stylesheet">
-    <style>
-        #main {
-            height: 100vh;
-        }
-        .h300px{
-            height: 300px;
-        }
-        .dot{
-            width: 10px;
-            height: 10px;
-            position: absolute;
-        }
-    </style>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Dots Workbench</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Inconsolata|Indie+Flower|Open+Sans|Quicksand" rel="stylesheet">
+		<style>
+			#main {
+				height: 100vh;
+			}
+
+			.h300px {
+				height: 300px;
+			}
+
+			.dot {
+				width: 10px;
+				height: 10px;
+				position: absolute;
+			}
+		</style>
 	</head>
+
 	<body>
 		<article id="main">
 			<div class="pb-5 color-change-bg overflow-hidden">
@@ -36,59 +39,58 @@
 							</div>
 						</div>
 						<div class="col-12 h300px">
-                                <div id="mv2">
+							<div id="mv2">
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
-							</div>						
+							</div>
 						</div>
 						<div class="col-12 h300px">
-                                <div id="mv3">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>			
+							<div id="mv3">
+								<div class="dot"></div>
+								<div class="dot"></div>
+								<div class="dot"></div>
+								<div class="dot"></div>
+								<div class="dot"></div>
+							</div>
 						</div>
 					</div>
 				</div>
-            </div>
-            <script src="../src/anime/lib/anime.min.js"></script>
-            <script src="../src/dots.js"></script>
+			</div>
+			<script type="module" src="http://localhost:3000/src/dots-old.mjs"></script>
 			<script>
-			
+
 
 				let dotsRTL = document.getElementById("mv1");
 				let dotsLTR = document.getElementById("mv2");
 				let dotsLTR2 = document.getElementById("mv3");
 				dotsMovement({
-					target: dotsRTL, 
-					start: [-6, -6], 
-					end: [360, 360], 
-					time: 1000, 
-					curve: "cubicX", 
+					target: dotsRTL,
+					start: [-6, -6],
+					end: [360, 360],
+					time: 1000,
+					curve: "cubicX",
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
 				dotsMovement({
-					target: dotsLTR, 
-					start: [-6, -6], 
-					end: [360, 360], 
-					time: 1000, 
-					curve: "cubicY", 
+					target: dotsLTR,
+					start: [-6, -6],
+					end: [360, 360],
+					time: 1000,
+					curve: "cubicY",
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
 				dotsMovement({
-					target: dotsLTR2, 
-					start: [-6, -6], 
-					end: [360, 360], 
-					time: 1000, 
-					curve: "linearX", 
+					target: dotsLTR2,
+					start: [-6, -6],
+					end: [360, 360],
+					time: 1000,
+					curve: "linearX",
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
-				
+
 			</script>
 		</article>
 	</body>
