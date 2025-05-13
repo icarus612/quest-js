@@ -58,16 +58,22 @@ function createColorAnimation(colors, duration) {
 
 const quest = (options) => {
   const { 
-    target, 
+    members = [],
+		parties = [], 
     start, 
     end, 
     duration, 
     pattern = 'cubic', 
+		split = 'x',
+		singleton = false,
     colors = ['#000', '#555']
   } = options;
 
-  const targets = Array.isArray(target) ? target : [target];
+	const $ = (selector) => singleton ? document?.querySelector(selector) : document?.querySelectorAll(selector);
+  const parseEl = (selector) => typeof selector === 'string' ? $(selector) : selector;
   
+	let targets = members?.map(member => parseEl(member));
+	parties?.forEach(party => targets.push(parseEl(party).children));
   targets.forEach(container => {
     Array.from(container.children).forEach((element, index) => {
       // Calculate movement vectors
@@ -142,4 +148,5 @@ function getPositionFromSelector(selector, element) {
     targetCenterY - elementCenterY
   ];
 }
+
 export default quest 
