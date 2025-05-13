@@ -21,6 +21,16 @@
 				height: 10px;
 				position: absolute;
 			}
+			.start {
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			.end {
+				position: absolute;
+				top: 100%;
+				left: 100%;
+			}
 		</style>
 	</head>
 
@@ -31,6 +41,8 @@
 					<div class="d-flex flex-row align-items-center flex-wrap" id="container">
 						<div class="col-12 h300px">
 							<div id="mv1">
+								<div class="start"></div>
+								<div class="end"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
@@ -40,6 +52,8 @@
 						</div>
 						<div class="col-12 h300px">
 							<div id="mv2">
+								<div class="start"></div>
+								<div class="end"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
@@ -49,6 +63,8 @@
 						</div>
 						<div class="col-12 h300px">
 							<div id="mv3">
+								<div class="start"></div>
+								<div class="end"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
@@ -59,33 +75,36 @@
 					</div>
 				</div>
 			</div>
-			<script type="module" src="http://localhost:3000/src/dots-old.mjs"></script>
-			<script>
+			<script type="importmap">
+				{
+					"imports": {
+						"animejs": "http://localhost:3000/node_modules/animejs/lib/anime.esm.js"
+					}
+				}
+				</script>
+			<script type="module">
+				import quest from "http://localhost:3000/src/quest.mjs";
 
-
-				let dotsRTL = document.getElementById("mv1");
-				let dotsLTR = document.getElementById("mv2");
-				let dotsLTR2 = document.getElementById("mv3");
-				dotsMovement({
-					target: dotsRTL,
-					start: [-6, -6],
-					end: [360, 360],
+				quest({
+					target: '#mv1 .dot',
+					start: '#mv1 .start',
+					end: '#mv1 .end',
 					time: 1000,
 					curve: "cubicX",
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
-				dotsMovement({
-					target: dotsLTR,
-					start: [-6, -6],
-					end: [360, 360],
+				quest({
+					target: '#mv2 .dot',
+					start: '#mv2 .start',
+					end: '#mv2 .end',
 					time: 1000,
 					curve: "cubicY",
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
-				dotsMovement({
-					target: dotsLTR2,
-					start: [-6, -6],
-					end: [360, 360],
+				quest({
+					target: '#mv3 .dot',
+					start: '#mv3 .start',
+					end: '#mv3 .end',
 					time: 1000,
 					curve: "linearX",
 					color: ["#009de4", "#06f3a0", "#f30659"]

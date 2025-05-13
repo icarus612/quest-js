@@ -252,7 +252,7 @@ let animation = (e, t, svg, mvX, mvY, crv, clr, d) => {
 
 }
 
-export const dots = (params) => {
+export const quest = (params) => {
 	const {
 		startEl,
 		endEl,
