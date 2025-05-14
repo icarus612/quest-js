@@ -29,12 +29,12 @@ jobs:
         id: version-bump
         run: |
           # Get latest commit message
-          COMMIT_MSG=$(git log -1 --pretty=%B)
+          V_TAGS=$(git tag -l "v*")
           
           # Determine version bump based on commit message
-          if [[ "$COMMIT_MSG" == *"#major"* ]]; then
+          if [[ "$V_TAGS" == *"#major"* ]]; then
             echo "bump=major" >> $GITHUB_OUTPUT
-          elif [[ "$COMMIT_MSG" == *"#minor"* ]]; then
+          elif [[ "$V_TAGS" == *"#minor"* ]]; then
             echo "bump=minor" >> $GITHUB_OUTPUT
           else
             echo "bump=patch" >> $GITHUB_OUTPUT
