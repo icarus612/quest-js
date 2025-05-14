@@ -1,0 +1,51 @@
+on:
+  push:
+    branches:
+      - main 
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Determine version bump
+        id: version-bump
+        run: |
+          # Get latest commit message
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          
+          # Determine version bump based on commit message
+          if [[ "$COMMIT_MSG" == *"#major"* ]]; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+          elif [[ "$COMMIT_MSG" == *"#minor"* ]]; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update version
+        run: |
+          npm version ${{ steps.version-bump.outputs.bump }} -m "Bump version to %s [skip ci]"
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version: $NEW_VERSION"
+
+      - name: Push changes
+        run: |
+          git push --follow-tags origin ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }} 
