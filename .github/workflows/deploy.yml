@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Needed to access commit history for versioning
-          token: ${{ secrets.PAT }}  # Using PAT instead of GITHUB_TOKEN
 
       - name: Setup Node.js
         uses: actions/setup-node@v3

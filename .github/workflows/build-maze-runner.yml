@@ -1,0 +1,95 @@
+name: Build Maze Runner 
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - name: Checkout source repository
+      uses: actions/checkout@v4
+      with:
+        path: daedalus-mono
+
+    - name: Build Maze Runner Mono
+      run: |
+        git clone https://${{ secrets.PAT }}@github.com/icarus612/maze-runner-mono.git
+
+    - name: Remove old content
+      run: |
+        rm -rf maze-runner-mono/apps/*
+        rm -rf maze-runner-mono/libs/*
+
+    - name: Copy content
+      run: |
+        cp -R  daedalus-mono/apps/flask/maze-runner maze-runner-mono/apps/flask 
+        cp -R  daedalus-mono/apps/next/maze-runner maze-runner-mono/apps/next
+
+        cp -R  daedalus-mono/libs/python/maze-runner maze-runner-mono/libs/python
+        cp -R  daedalus-mono/libs/javascript/node/maze-runner maze-runner-mono/libs/javascript
+        cp -R  daedalus-mono/libs/javascript/react/maze-runner maze-runner-mono/libs/react-js 
+
+    - name: Update README.md
+      run: |
+        cd maze-runner-mono
+         echo "
+          # Maze Runner Monorepo
+          ## Built by: dev.icarus
+
+          ## Notice
+
+          This repository is automatically maintained through GitHub Actions. The content here is synced from the [daedalus-mono](https://github.com/icarus612/daedalus-mono) repository. Its primary function is to allow others to see a project/collection of micro-projects that I sometimes work on and am mildly proud of.  
+          
+          ## My Other Projects
+
+          Each of my main projects has its own dedicated repository. You can browse them by visiting my [GitHub profile](https://github.com/icarus612). Here's what you can expect:
+
+          - **Project Overviews**: In each repository, you'll find a detailed README explaining the project's purpose, technology stack, and how to get it up and running.
+
+          - **Code Insights**: Dive into the code to see my coding style and the technologies I work with. Feel free to explore the commit history for a deeper understanding of the development process.
+          
+          ## Project Structure
+          
+          <pre>
+          " > README.md
+
+          ./../daedalus-mono/libs/bash/github-actions/create-mono-file-tree.sh >> README.md
+
+          echo "
+          </pre>
+
+          ## Collaboration
+
+          While this repository is not open for collaboration, I'm definitely open to it on other projects if you're interested. If you're looking to contribute to my active open source projects, I'd recommend visiting [The Icarus Project](https://github.com/the-icarus-project). That's where you'll find projects specifically designed for collaboration, complete with all the details and guidelines you need to get started.
+
+          ## Licensing
+
+          All my public projects are open-source and licensed under the MIT License. This means you are free to use, modify, and distribute them as you wish, as long as you include the original copyright notice and disclaimer. Check the LICENSE file in each project for more details.
+
+          ## My Website
+
+          For a more curated experience and in-depth insights about my work and interests, check out my personal website at [devicarus.com](https://devicarus.com).
+
+          ## Stay Connected
+
+          I love to connect with fellow developers and tech enthusiasts. Follow me on GitHub to stay updated with my latest projects. For real-time updates and professional networking, connect with me on [LinkedIn](https://www.linkedin.com/in/ellis-hogan-99a646161) or [GitHub](https://github.com/icarus612).
+
+          Thank you for visiting, and happy coding!
+
+          ---
+
+          © 2024 Icarus612. All Rights Reserved.
+          " >> README.md
+
+    - name: Commit and push
+      run: |
+        cd maze-runner-mono
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "Sync content from source repository" || exit 0
+        git push https://${{ secrets.PAT }}@github.com/icarus612/maze-runner-mono.git
