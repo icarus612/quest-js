@@ -149,4 +149,4 @@ function getPositionFromSelector(selector, element) {
   ];
 }
 
-export default quest 
+export default ()=> console.log('quest.js loaded'); 
