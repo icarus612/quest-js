@@ -57,7 +57,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}  # Using PAT for push operation
 
+      - name: Setup npm authentication
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "@dev-dae:registry=https://registry.npmjs.org/" >> ~/.npmrc
+          cat ~/.npmrc  # Print for debugging (remove sensitive info)
+
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
