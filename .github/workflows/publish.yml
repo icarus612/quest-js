@@ -1,4 +1,4 @@
-name: Release
+name: Publish Package
 
 on:
   push:
@@ -8,27 +8,43 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
+        
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
+          
       - name: Install dependencies
         run: npm ci
-      
-      - name: Release
+        
+      # 1. Publish to npm
+      - name: Setup npm registry
+        uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@dev-dae'
+          
+      - name: Publish to npm
+        run: npm publish --access public
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          
+      # 2. Publish to GitHub Packages
+      - name: Setup GitHub registry
+        uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@dev-dae'
+          
+      - name: Update package.json for GitHub Packages
+        run: |
+          # Temporarily modify package.json name to use GitHub's format
+          sed -i 's/"name": "@dev-dae\/quest-js"/"name": "@icarus612\/quest-js"/g' package.json
+          
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
