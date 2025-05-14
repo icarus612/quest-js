@@ -11,12 +11,13 @@ on:
 jobs:
   version-and-publish:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          token: ${{ secrets.PAT }}
+          fetch-depth: 0  # Needed to access commit history for versioning
+          token: ${{ secrets.PAT }}  # Using PAT instead of GITHUB_TOKEN
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -57,7 +58,10 @@ jobs:
           echo "New version: $NEW_VERSION"
 
       - name: Push changes
-        run: git push --follow-tags
+        run: |
+          git push --follow-tags origin ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}  # Using PAT for push operation
 
       - name: Publish to npm
         run: npm publish
