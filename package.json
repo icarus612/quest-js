@@ -1,8 +1,8 @@
 {
-  "name": "dots-js",
+  "name": "@dev-dae/quest-js",
   "version": "1.0.0",
   "description": "Animation library for creating dot paths",
-  "main": "src/dots.mjs",
+  "main": "src/quest.mjs",
   "directories": {
     "example": "example"
   },
@@ -12,8 +12,15 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/icarus612/dots-js.git"
+    "url": "git+https://github.com/icarus612/quest-js.git"
   },
-  "author": "",
-  "license": "MIT"
+  "author": "daedalus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/icarus612/quest-js/issues"
+  },
+  "homepage": "https://github.com/icarus612/quest-js#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
