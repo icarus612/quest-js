@@ -52,4 +52,4 @@ jobs:
         run: |
           git push --follow-tags origin ${{ github.ref_name }}
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }} 
+          GITHUB_TOKEN: ${{ secrets.PAT }}
