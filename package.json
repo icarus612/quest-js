@@ -1,6 +1,6 @@
 {
   "name": "@dev-dae/quest-js",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "Animation library for creating curved path animations",
   "main": "src/quest.mjs",
   "directories": {
