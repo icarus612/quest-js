@@ -25,18 +25,9 @@ jobs:
            
       # - name: Build package
       #   run: npm run build
-      - name: Create .npmrc file
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
-          echo "@dev-dae:registry=https://registry.npmjs.org/" >> ~/.npmrc
-          echo "always-auth=true" >> ~/.npmrc
-        shell: bash
 
       - name: Publish to npm
         run: | 
-          npm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
-          npm publish --access public
+          npm publish --registry=https://registry.npmjs.org/ --token=${NODE_AUTH_TOKEN} --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
-          
