@@ -22,7 +22,7 @@ jobs:
         run: npm ci
       
       - name: Debug
-        run: 
+        run: |
           echo "NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}"
       
       # - name: Build package
