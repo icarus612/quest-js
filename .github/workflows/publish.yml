@@ -8,7 +8,6 @@ on:
 
 jobs:
   deploy:
-    if: github.ref_name == 'main' || endsWith(github.ref, '/main')  # Only runs if the branch is main
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

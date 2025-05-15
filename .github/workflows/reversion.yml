@@ -2,12 +2,10 @@ name: Reversion
 
 on:
   push:
-    tags:
-      - 'v*'  # Triggered only by tags starting with 'v'
-
+    branches:
+      - main 
 jobs:
-  deploy:
-    if: github.ref_name == 'main' || endsWith(github.ref, '/main')  # Only runs if the branch is main
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,12 +29,12 @@ jobs:
         id: version-bump
         run: |
           # Get latest commit message
-          V_TAGS=$(git tag -l "v*")
+          COMMIT_MSG=$(git log -1 --pretty=%B)
           
           # Determine version bump based on commit message
-          if [[ "$V_TAGS" == *"#major"* ]]; then
+          if [[ "$COMMIT_MSG" == *"#major"* ]]; then
             echo "bump=major" >> $GITHUB_OUTPUT
-          elif [[ "$V_TAGS" == *"#minor"* ]]; then
+          elif [[ "$COMMIT_MSG" == *"#minor"* ]]; then
             echo "bump=minor" >> $GITHUB_OUTPUT
           else
             echo "bump=patch" >> $GITHUB_OUTPUT
