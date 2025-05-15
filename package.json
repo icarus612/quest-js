@@ -22,5 +22,12 @@
   "homepage": "https://github.com/icarus612/quest-js#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src/quest.mjs",
+    "src/quest.js"
+  ],
 }
