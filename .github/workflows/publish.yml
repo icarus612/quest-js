@@ -25,11 +25,10 @@ jobs:
         run: |
           if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
             echo "NPM_TOKEN exists and is not empty ✅"
-            echo "Length of token: ${#NODE_AUTH_TOKEN}"
           else
             echo "NPM_TOKEN is empty or not set ❌"
           fi      
-          
+
       # - name: Build package
       #   run: npm run build
       
