@@ -20,22 +20,7 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
-      
-      - name: Debug  - NPM
-        run: |
-          if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
-            echo "NPM_TOKEN exists and is not empty ✅"
-          else
-            echo "NPM_TOKEN is empty or not set ❌"
-          fi      
-
-      - name: Debug - PAT
-        run: |
-          if [ -n "${{ secrets.PAT }}" ]; then
-            echo "PAT exists and is not empty ✅"
-          else
-            echo "PAT is empty or not set ❌"
-          fi      
+           
       # - name: Build package
       #   run: npm run build
       
