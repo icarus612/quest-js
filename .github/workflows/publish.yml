@@ -33,4 +33,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: echo ${NODE_AUTH_TOKEN} && npm publish --access public 
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
