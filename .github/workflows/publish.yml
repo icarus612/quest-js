@@ -22,5 +22,5 @@ jobs:
           node-version: 22
       - run: npm config set '//registry.npmjs.org/:_authToken' "${NPM_AUTH_TOKEN}"
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm publish --access public
