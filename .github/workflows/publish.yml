@@ -27,7 +27,9 @@ jobs:
       #   run: npm run build
       
       - name: Authenticate with npm
-        run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+        run: npm config set //registry.npmjs.org/:_authToken ${ NODE_AUTH_TOKEN }
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to npm
         run: npm publish --access public
