@@ -30,7 +30,7 @@ jobs:
         run: |
           # Get latest commit message
           COMMIT_MSG=$(git log -1 --pretty=%B)
-          
+          echo "Latest commit message: $COMMIT_MSG"
           # Determine version bump based on commit message
           if [[ "$COMMIT_MSG" == *"#major"* ]]; then
             echo "bump=major" >> $GITHUB_OUTPUT
