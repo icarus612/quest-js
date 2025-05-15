@@ -21,8 +21,17 @@ jobs:
         run: npm ci
       
       # - name: Build package
-      #   run: npm run build
-      
+            #   run: npm run build
+      - name: Debug npm configuration
+        run: |
+          echo "NPM config:"
+          npm config list
+          echo "Content of ~/.npmrc:"
+          cat ~/.npmrc || echo "No ~/.npmrc file"
+          echo "Testing authentication:"
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          npm whoami || echo "Authentication failed"
+          
       - name: Publish to npm
         uses: JS-DevTools/npm-publish@v1
         with:
