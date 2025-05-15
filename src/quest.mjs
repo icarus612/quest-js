@@ -148,5 +148,5 @@ function getPositionFromSelector(selector, element) {
     targetCenterY - elementCenterY
   ];
 }
-
-export default ()=> console.log('quest.js loaded??');
+const q = () => console.log('quest.js loaded??');
+export default q
