@@ -1,5 +1,3 @@
-name: Deploy Version Tag
-
 name: Deploy Release
 
 on:
