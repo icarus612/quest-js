@@ -1,4 +1,4 @@
-name: Deploy Release
+name: Publish to NPM
 
 on:
   workflow_run:
