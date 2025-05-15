@@ -1,9 +1,12 @@
 name: Deploy Version Tag
 
+name: Deploy Release
+
 on:
-  push:
-    tags:
-      - 'v*'  # Triggered only by tags starting with 'v'
+  workflow_run:
+    workflows: ["Reversion"]
+    types:
+      - completed
 
 jobs:
   deploy:
