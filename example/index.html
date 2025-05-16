@@ -20,16 +20,28 @@
 				width: 10px;
 				height: 10px;
 				position: absolute;
+				background-color: black;
+				border-radius: 50%;
 			}
 			.start {
 				position: absolute;
 				top: 0;
 				left: 0;
+				width: 20px;
+				height: 20px;
+				background-color: #009de4;
+				border-radius: 50%;
+				text-align: center;
 			}
 			.end {
 				position: absolute;
 				top: 100%;
 				left: 100%;
+				width: 20px;
+				height: 20px;
+				background-color: #f30659;
+				border-radius: 50%;
+				text-align: center;
 			}
 		</style>
 	</head>
@@ -41,8 +53,8 @@
 					<div class="d-flex flex-row align-items-center flex-wrap" id="container">
 						<div class="col-12 h300px">
 							<div id="mv1">
-								<div class="start"></div>
-								<div class="end"></div>
+								<div class="start">1</div>
+								<div class="end">1</div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
@@ -52,8 +64,8 @@
 						</div>
 						<div class="col-12 h300px">
 							<div id="mv2">
-								<div class="start"></div>
-								<div class="end"></div>
+								<div class="start">2</div>
+								<div class="end">2</div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
@@ -63,8 +75,8 @@
 						</div>
 						<div class="col-12 h300px">
 							<div id="mv3">
-								<div class="start"></div>
-								<div class="end"></div>
+								<div class="start">3</div>
+								<div class="end">3</div>
 								<div class="dot"></div>
 								<div class="dot"></div>
 								<div class="dot"></div>
@@ -86,27 +98,30 @@
 				import quest from "http://localhost:3000/src/quest.mjs";
 
 				quest({
-					target: '#mv1 .dot',
+					members: '#mv1 .dot',
 					start: '#mv1 .start',
 					end: '#mv1 .end',
-					time: 1000,
-					curve: "cubicX",
+					duration: 1000,
+					curve: "cubic",
+					split: 'x',
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
 				quest({
-					target: '#mv2 .dot',
+					members: '#mv2 .dot',
 					start: '#mv2 .start',
 					end: '#mv2 .end',
-					time: 1000,
-					curve: "cubicY",
+					duration: 1000,
+					curve: "cubic",
+					split: 'y',
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
 				quest({
-					target: '#mv3 .dot',
+					members: '#mv3 .dot',
 					start: '#mv3 .start',
 					end: '#mv3 .end',
-					time: 1000,
-					curve: "linearX",
+					duration: 1000,
+					curve: "linear",
+					split: false,
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
 
