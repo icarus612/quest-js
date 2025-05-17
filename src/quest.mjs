@@ -5,9 +5,8 @@ const $ = (selector, singleton = false) => singleton ? [document?.querySelector(
 const parseEl = (selector, singleton = false) => typeof selector === 'string' ? $(selector, singleton) : selector;
 const makeArray = (val) => Array.isArray(val) ? val : [val];
 
-const getPositionFromSelector = (selector, element) => {
-  const target = document.querySelector(selector);
-  if (!target) return [0, 0];
+const getPositionFromSelector = (target, element) => {
+  if (!target) throw new Error('Target element not found');
 
   const targetRect = target.getBoundingClientRect();
   const elementRect = element.getBoundingClientRect();
@@ -119,26 +118,18 @@ const quest = (options) => {
     colors = ['#000', '#555']
   } = options;
 
-
   const targets = [
     ...makeArray(members)?.flatMap((member) => parseEl(member, singleton)),
     ...makeArray(parties)?.flatMap((party) => parseEl(party, singleton).flatMap((el)=> [...el.children]))
   ]
+  const startEl = parseEl(start);
+  const endEl = parseEl(end);
+  const startPos = getPositionFromSelector(startEl);
+  const endPos = getPositionFromSelector(endEl);
+  const xMovement = [startPos[0], endPos[0]];
+  const yMovement = [startPos[1], endPos[1]];
 
   targets.forEach((element, index) => {
-    // Calculate movement vectors
-    const startPos = typeof start === 'string'
-      ? getPositionFromSelector(start, element)
-      : start;
-
-    const endPos = typeof end === 'string'
-      ? getPositionFromSelector(end, element)
-      : end;
-
-    const xMovement = [startPos[0], endPos[0]];
-    const yMovement = [startPos[1], endPos[1]];
-
-    // Create and start animation
     animateElement({
       element,
       index,
