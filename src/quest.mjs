@@ -1,6 +1,8 @@
 import { animate, stagger, utils, createTimeline } from 'animejs';
 
 // Animation pattern generators
+const $ = (selector, singleton = false) => singleton ? [document?.querySelector(selector)] : [...document?.querySelectorAll(selector)];
+
 function createMovementAnimation(
   movement,
   duration,
@@ -69,15 +71,12 @@ const quest = (options) => {
     colors = ['#000', '#555']
   } = options;
 
-  const $ = (selector) => singleton ? document?.querySelector(selector) : document?.querySelectorAll(selector);
-  const parseEl = (selector) => typeof selector === 'string' ? $(selector) : selector;
+  const parseEl = (selector) => typeof selector === 'string' ? $(selector, singleton) : selector;
 
   const targets = [
-    ...makeArray(members)?.map((member) => parseEl(member)),
-    ...makeArray(parties)?.flatMap((party) => parseEl(party).children)
+    ...makeArray(members)?.flatMap((member) => parseEl(member)),
+    ...makeArray(parties)?.flatMap((party) => parseEl(party).flatMap((el)=> [...el.children]))
   ]
-
-  console.log(targets)
 
   targets.forEach((element, index) => {
     // Calculate movement vectors

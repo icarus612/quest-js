@@ -77,11 +77,14 @@
 							<div id="mv3">
 								<div class="start">3</div>
 								<div class="end">3</div>
-								<div class="dot"></div>
-								<div class="dot"></div>
-								<div class="dot"></div>
-								<div class="dot"></div>
-								<div class="dot"></div>
+								<div id="mv3-inner">
+
+									<div class="dot"></div>
+									<div class="dot"></div>
+									<div class="dot"></div>
+									<div class="dot"></div>
+									<div class="dot"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -116,7 +119,7 @@
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
 				quest({
-					members: '#mv3 .dot',
+					parties: '#mv3 #mv3-inner',
 					start: '#mv3 .start',
 					end: '#mv3 .end',
 					duration: 1000,
