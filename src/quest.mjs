@@ -122,8 +122,8 @@ const quest = (options) => {
     ...makeArray(members)?.flatMap((member) => parseEl(member, singleton)),
     ...makeArray(parties)?.flatMap((party) => parseEl(party, singleton).flatMap((el)=> [...el.children]))
   ]
-  const startEl = parseEl(start);
-  const endEl = parseEl(end);
+  const startEl = parseEl(start, singleton=true);
+  const endEl = parseEl(end, singleton=true);
   const startPos = getPositionFromSelector(startEl);
   const endPos = getPositionFromSelector(endEl);
   const xMovement = [startPos[0], endPos[0]];
