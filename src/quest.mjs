@@ -22,50 +22,71 @@ const getPositionFromSelector = (target, element) => {
   ];
 }
 
-const createMovementAnimation = (
-  movement,
-  duration,
-  pattern
-) =>{
+const checkPattern = (pattern) => {
   switch (pattern) {
-    case 'cubic':
-      return [{
-        value: movement,
-        duration: duration * 2.5,
-        ease: 'inOutCubic'
-      }];
-
     case 'linear':
-      return [{
-        value: movement,
-        duration: duration * 1.5,
-        ease: 'linear',
-        delay: duration / 2
-      }];
-
-    case 'split':
-      const midpoint = (movement[0] + movement[1]) / 2;
-      return [
-        {
-          value: [movement[0], midpoint],
-          duration: duration,
-          ease: 'linear'
-        },
-        {
-          value: [midpoint, movement[1]],
-          duration: duration,
-          ease: 'linear',
-          delay: duration
-        }
-      ];
-
-    default:
-      return [{
-        value: movement,
-        duration: duration * 2,
-        ease: 'inOutCubic'
-      }];
+      return createLinearAnimation;
+      case 'cubic':
+      default:
+        return createCubicAnimation;
   }
+}
+
+const createCubicAnimation = (
+  timeline,
+  settings,
+) =>{
+  const {
+    element,
+    xMovement,
+    yMovement,
+    duration,
+    index,
+    split,  
+    partyTotal,
+  } = settings;
+  const staggerDelay = calculateStaggeredDelay(index, partyTotal, duration);
+  const checkSplit = (dim) => dim === split ? 'inOutCubic' : 'linear';
+  timeline.add(element, {
+    x: {
+      to: xMovement,
+      ease: checkSplit('x'),
+    },
+    y: {
+      to: yMovement,
+      ease: checkSplit('y'),
+    },
+    fill: colors,
+    backgroundColor: colors,
+  }, staggerDelay);
+}
+
+
+const createLinearAnimation = (
+  timeline,
+  settings,
+) =>{
+  const {
+    element,
+    xMovement,
+    yMovement,
+    duration,
+    index,
+    partyTotal,
+  } = settings;
+  const staggerDelay = calculateStaggeredDelay(index, partyTotal, duration);
+  timeline.add(element, {
+    x: {
+      to: xMovement,
+      ease: 'linear',
+    },
+    y: {
+      to: yMovement,
+      ease: 'linear',
+    },
+    fill: colors,
+    backgroundColor: colors,
+  }, staggerDelay);
 }
 
 const createColorAnimation = (colors, duration) => {
@@ -79,23 +100,35 @@ const createColorAnimation = (colors, duration) => {
 
 const animateElement = (props) => {
   const {
-    element,
-    index,
-    container,
+    split,
+    pattern,
+    index, 
+    duration,
+    partyTotal,
     xMovement,
     yMovement,
-    duration,
-    pattern,
-    colors
+    element,
+    colors,
   } = props;
 
   const timeline = createTimeline({ defaults: { loop: true } });
-  timeline.add(element, {
-    translateX: xMovement,
-    translateY: yMovement,
-    fill: colors,
-    backgroundColor: colors,
-  }, calculateStaggeredDelay(index, container.children.length, duration));
+  
+  const settings = {
+    ...props,
+    stagger: calculateStaggeredDelay(index, partyTotal, duration)
+  }
+
+  if (split) {
+    const animationPattern = checkPattern(pattern);
+    animationPattern(timeline, settings);
+  } else {
+    timeline.add(element, {
+      translateX: xMovement,
+      translateY: yMovement,
+      fill: colors,
+      backgroundColor: colors,
+    }, );
+  }
 }
 
 function calculateStaggeredDelay(index, totalElements, duration) {
@@ -115,7 +148,7 @@ const quest = (options) => {
     colors = ['#000', '#555']
   } = options;
 
-  const targets = [
+  const finalParty = [
     ...makeArray(members)?.flatMap((member) => parseEl(member, singleton)),
     ...makeArray(parties)?.flatMap((party) => parseEl(party, singleton).flatMap((el)=> [...el.children]))
   ]
@@ -123,7 +156,7 @@ const quest = (options) => {
   const startEl = parseEl(start, true);
   const endEl = parseEl(end, true);
 
-  targets.forEach((element, index) => {
+  finalParty.forEach((element, index) => {
     const startPos = getPositionFromSelector(startEl, element);
     const endPos = getPositionFromSelector(endEl, element);
     const xMovement = [startPos[0], endPos[0]];
@@ -132,6 +165,7 @@ const quest = (options) => {
     animateElement({
       element,
       index,
+      partyTotal: finalParty.length,
       container,
       xMovement,
       yMovement,
