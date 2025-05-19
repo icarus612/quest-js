@@ -1,4 +1,4 @@
-import { animate, stagger, utils, createTimeline } from 'animejs';
+import { stagger, utils, createTimeline } from 'animejs';
 
 // Animation pattern generators
 const $ = (selector, singleton = false) => singleton ? document?.querySelector(selector) : [...document?.querySelectorAll(selector)];
@@ -22,7 +22,7 @@ const getPositionFromSelector = (target, element) => {
   ];
 }
 
-const createMovementAnimation = (
+const addMovementsAnimation = (
   movement,
   duration,
   pattern
@@ -85,11 +85,11 @@ const animateElement = (props) => {
     xMovement,
     yMovement,
     duration,
-    pattern,
     colors
   } = props;
 
   const timeline = createTimeline({ defaults: { loop: true } });
+  addMovementsAnimation(timeline, {...props})
   timeline.add(element, {
     translateX: xMovement,
     translateY: yMovement,
@@ -112,7 +112,7 @@ const quest = (options) => {
     pattern = 'cubic',
     split = 'x',
     singleton = false,
-    colors = ['#000', '#555']
+    colors = []
   } = options;
 
   const targets = [
