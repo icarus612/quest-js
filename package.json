@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/icarus612/quest-js#readme",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx serve -l 3000 --cors"
   },
   "publishConfig": {
     "access": "public"

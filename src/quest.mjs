@@ -90,14 +90,11 @@ const animateElement = (props) => {
   } = props;
 
   const timeline = createTimeline({ defaults: { loop: true } });
-
-  timeline.add({
-    targets: element,
-    translateX: createMovementAnimation(xMovement, duration, pattern),
-    translateY: createMovementAnimation(yMovement, duration, pattern),
-    fill: createColorAnimation(colors, duration),
-    backgroundColor: createColorAnimation(colors, duration),
-    complete: () => timeline.restart()
+  timeline.add(element, {
+    translateX: xMovement,
+    translateY: yMovement,
+    fill: colors,
+    backgroundColor: colors,
   }, calculateStaggeredDelay(index, container.children.length, duration));
 }
 
@@ -122,15 +119,16 @@ const quest = (options) => {
     ...makeArray(members)?.flatMap((member) => parseEl(member, singleton)),
     ...makeArray(parties)?.flatMap((party) => parseEl(party, singleton).flatMap((el)=> [...el.children]))
   ]
+  
   const startEl = parseEl(start, true);
   const endEl = parseEl(end, true);
-  console.log(startEl, endEl);
-  const startPos = getPositionFromSelector(startEl);
-  const endPos = getPositionFromSelector(endEl);
-  const xMovement = [startPos[0], endPos[0]];
-  const yMovement = [startPos[1], endPos[1]];
 
   targets.forEach((element, index) => {
+    const startPos = getPositionFromSelector(startEl, element);
+    const endPos = getPositionFromSelector(endEl, element);
+    const xMovement = [startPos[0], endPos[0]];
+    const yMovement = [startPos[1], endPos[1]];
+    
     animateElement({
       element,
       index,
@@ -139,6 +137,7 @@ const quest = (options) => {
       yMovement,
       duration,
       pattern,
+      split,
       colors
     });
   });
