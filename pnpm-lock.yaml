@@ -9,8 +9,26 @@ dependencies:
     specifier: ^4.0.2
     version: 4.0.2
 
+devDependencies:
+  '@types/animejs':
+    specifier: ^3.1.13
+    version: 3.1.13
+  typescript:
+    specifier: ^5.3.0
+    version: 5.8.3
+
 packages:
+
+  /@types/animejs@3.1.13:
+    resolution: {integrity: sha512-yWg9l1z7CAv/TKpty4/vupEh24jDGUZXv4r26StRkpUPQm04ztJaftgpto8vwdFs8SiTq6XfaPKCSI+wjzNMvQ==}
+    dev: true
 
   /animejs@4.0.2:
     resolution: {integrity: sha512-f0L/kSya2RF23iMSF/VO01pMmLwlAFoiQeNAvBXhEyLzIPd2/QTBRatwGUqkVCC6seaAJYzAkGir55N4SL+h3A==}
     dev: false
+
+  /typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true

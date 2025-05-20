@@ -6,7 +6,9 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -21,6 +23,7 @@
     "animejs": "^4.0.2"
   },
   "devDependencies": {
+    "@types/animejs": "^3.1.13",
     "typescript": "^5.3.0"
   },
   "repository": {

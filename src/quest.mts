@@ -1,11 +1,72 @@
+/// <reference path="./animejs.d.ts" />
 import { animate } from 'animejs';
-import { stagger, utils, createTimeline } from 'animejs';
 
-const $ = (selector, singleton = false) => singleton ? document?.querySelector(selector) : [...document?.querySelectorAll(selector)];
-const parseEl = (selector, singleton = false) => typeof selector === 'string' ? $(selector, singleton) : selector;
-const makeArray = (val) => Array.isArray(val) ? val : [val];
+type Element = HTMLElement;
+type ElementOrString = Element | string;
+type SingleOrArray<T> = T | T[];
+type SplitType = 'x' | 'y' | null;
+type PathType = 'linear' | 'cubic';
+type EaseType = 'linear' | 'inOutCubic';
+type MovementArray = [number, number];
+type ColorArray = string[];
 
-const getPositionFromSelector = (target, element) => {
+interface PositionResult {
+  x: any;
+  y: any;
+}
+
+interface SplitAnimationParams {
+  xMovement: MovementArray;
+  yMovement: MovementArray;
+  split: SplitType;
+  duration?: number;
+  staggerDelay?: number;
+}
+
+interface LinearSplitParams {
+  isSplit: boolean;
+  movement: MovementArray;
+  duration: number;
+  staggerDelay: number;
+  totalDistance: number;
+}
+
+interface AnimateElementParams {
+  element: Element;
+  split: SplitType;
+  path: PathType;
+  index: number;
+  pace: number;
+  duration: number;
+  partyTotal: number;
+  xMovement: MovementArray;
+  yMovement: MovementArray;
+  colors: ColorArray;
+}
+
+interface QuestParams {
+  start: ElementOrString;
+  end: ElementOrString;
+  members?: SingleOrArray<ElementOrString>;
+  parties?: SingleOrArray<ElementOrString>;
+  duration?: number;
+  pace?: number;
+  path?: PathType;
+  split?: SplitType;
+  singleton?: boolean;
+  colors?: ColorArray;
+}
+
+const $ = (selector: string, singleton: boolean = false): Element | Element[] => 
+  singleton ? document?.querySelector(selector) as Element : [...document?.querySelectorAll(selector)] as Element[];
+
+const parseEl = (selector: ElementOrString, singleton: boolean = false): Element | Element[] => 
+  typeof selector === 'string' ? $(selector, singleton) : selector;
+
+const makeArray = <T,>(val: SingleOrArray<T>): T[] => 
+  Array.isArray(val) ? val : [val];
+
+const getPositionFromSelector = (target: Element, element: Element): [number, number] => {
   if (!target) throw new Error('Target element not found');
 
   const targetRect = target.getBoundingClientRect();
@@ -22,7 +83,10 @@ const getPositionFromSelector = (target, element) => {
   ];
 }
 
-const createSplitAnimation = (path) => {
+// Define the type for functions that create split animations
+type SplitAnimationCreator = (params: SplitAnimationParams) => PositionResult;
+
+const createSplitAnimation = (path: PathType): SplitAnimationCreator => {
   switch (path) {
     case 'linear':
       return createLinearAnimation;
@@ -32,7 +96,7 @@ const createSplitAnimation = (path) => {
   }
 }
 
-const getDefaultEase = (path) => {
+const getDefaultEase = (path: PathType): EaseType => {
   switch (path) {
     case 'cubic':
       return 'inOutCubic';
@@ -46,9 +110,9 @@ const createCubicAnimation = ({
   xMovement,
   yMovement,
   split,
-}) => {
+}: SplitAnimationParams): PositionResult => {
   // Small helper function with but loses encapsulation with split variable.
-  const checkSplit = (dim) => dim === split ? 'inOutCubic' : 'linear';
+  const checkSplit = (dim: string): EaseType => dim === split ? 'inOutCubic' : 'linear';
 
   return {
     x: {
@@ -59,7 +123,6 @@ const createCubicAnimation = ({
       to: yMovement,
       ease: checkSplit('y'),
     },
-
   };
 }
 
@@ -69,7 +132,7 @@ const buildFromLinearSplit = ({
   duration,
   staggerDelay,
   totalDistance
-}) => {
+}: LinearSplitParams) => {
   const thisDistance = Math.abs(movement[1] - movement[0]);
   const newDuration = Math.round(duration * thisDistance / totalDistance);
   const remainingDuration = duration - newDuration;
@@ -77,21 +140,21 @@ const buildFromLinearSplit = ({
   if (isSplit) {
     return {
       to: movement,
-      ease: 'linear',
+      ease: 'linear' as EaseType,
       duration: newDuration,
       delay: staggerDelay + remainingDuration / 2,
     };
   } else {
     const midpoint = movement[1] / 2;
     return [{
-      to: [movement[0], midpoint],
-      ease: 'linear',
+      to: [movement[0], midpoint] as MovementArray,
+      ease: 'linear' as EaseType,
       duration: newDuration / 2,
       delay: staggerDelay,
     },
     {
-      to: [midpoint, movement[1]],
-      ease: 'linear',
+      to: [midpoint, movement[1]] as MovementArray,
+      ease: 'linear' as EaseType,
       duration: newDuration / 2,
       delay: remainingDuration,
     }];
@@ -101,14 +164,17 @@ const buildFromLinearSplit = ({
 const createLinearAnimation = ({
   xMovement,
   yMovement,
-  duration,
-  staggerDelay,
+  duration = 0,
+  staggerDelay = 0,
   split,
-}) => {
+}: SplitAnimationParams): PositionResult => {
   const totalDistance = Math.abs(xMovement[1] - xMovement[0]) + Math.abs(yMovement[1] - yMovement[0]);
-  const checkSplit = (isSplit, movement) => buildFromLinearSplit({ isSplit, movement, duration, staggerDelay, totalDistance })
-  let x = checkSplit('x' === split, xMovement);
-  let y = checkSplit('y' === split, yMovement);
+  const checkSplit = (isSplit: boolean, movement: MovementArray) => 
+    buildFromLinearSplit({ isSplit, movement, duration, staggerDelay, totalDistance });
+  
+  const x = checkSplit('x' === split, xMovement);
+  const y = checkSplit('y' === split, yMovement);
+  
   console.log({x, y});
   return { x, y };
 }
@@ -124,9 +190,9 @@ const animateElement = ({
   xMovement,
   yMovement,
   colors,
-}) => {
+}: AnimateElementParams): void => {
   const staggerDelay = ((duration * pace) / partyTotal) * index;
-  const settings = {
+  const settings: SplitAnimationParams = {
     split,
     xMovement,
     yMovement,
@@ -165,28 +231,28 @@ const quest = ({
   split = 'x',
   singleton = false,
   colors = []
-}) => {
+}: QuestParams): void => {
 
-  const finalParty = [
-    ...makeArray(members)?.flatMap((member) => parseEl(member, singleton)),
-    ...makeArray(parties)?.flatMap((party) => parseEl(party, singleton).flatMap((el) => [...el.children]))
-  ]
+  const finalParty: Element[] = [
+    ...makeArray(members)?.flatMap((member) => parseEl(member, singleton) as Element[]),
+    ...makeArray(parties)?.flatMap((party) => 
+      (parseEl(party, singleton) as Element[]).flatMap((el) => [...Array.from(el.children)] as Element[]))
+  ];
 
-  const startEl = parseEl(start, true);
-  const endEl = parseEl(end, true);
+  const startEl = parseEl(start, true) as Element;
+  const endEl = parseEl(end, true) as Element;
 
   finalParty.forEach((element, index) => {
     const startPos = getPositionFromSelector(startEl, element);
     const endPos = getPositionFromSelector(endEl, element);
-    const xMovement = [startPos[0], endPos[0]];
-    const yMovement = [startPos[1], endPos[1]];
+    const xMovement: MovementArray = [startPos[0], endPos[0]];
+    const yMovement: MovementArray = [startPos[1], endPos[1]];
     const partyTotal = finalParty.length;
 
     animateElement({
       element,
       index,
       partyTotal,
-      container,
       xMovement,
       yMovement,
       duration,
