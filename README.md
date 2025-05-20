@@ -1,31 +1,221 @@
-# Dots Anime
+# Quest.js
 
-This is a simple lightweight animation library, (currently) using anime.js to animate dots on a curve between two elements.
+A lightweight JavaScript animation library for creating smooth element transitions along paths between two points. Built on top of Anime.js, Quest.js specializes in orchestrating group animations with customizable movement patterns and staggered timing.
 
-## 
+## Features
 
-## My Other Projects
+- **Path-based animations**: Move elements from one point to another with linear or cubic easing
+- **Split animations**: Control X and Y movement independently for more complex trajectories  
+- **Staggered timing**: Animate multiple elements with configurable delays
+- **Flexible targeting**: Animate individual elements or entire groups
+- **Color transitions**: Smoothly transition colors during movement
+- **Looping animations**: Built-in support for repeating animations
 
-You can browse all my projects on my [GitHub profile](https://github.com/icarus612).
+## Installation
 
-## Collaboration
+```bash
+npm install @dev-dae/quest-js
+```
 
-While this repository is just a personal project and not really set up for collaboration, I'm definitely open to it if you're interested. However, if you're looking to contribute to my active open source projects, I'd recommend visiting [The Icarus Project](https://github.com/the-icarus-project). That's where you'll find projects specifically designed for collaboration, complete with all the details and guidelines you need to get started. If you are still undeterred and wish to contribute please make a PR detailing the bug or feature, and I'll get to it as soon as I can.
+## Quick Start
 
-## Licensing
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .dot {
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            background-color: black;
+            border-radius: 50%;
+        }
+        .start, .end {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        .start { 
+            top: 10px; 
+            left: 10px; 
+            background-color: blue; 
+        }
+        .end { 
+            top: 300px; 
+            left: 500px; 
+            background-color: red; 
+        }
+    </style>
+</head>
+<body>
+    <div class="start"></div>
+    <div class="end"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
 
-All my public projects are open-source and licensed under the MIT License. This means you are free to use, modify, and distribute them as you wish, as long as you include the original copyright notice and disclaimer. Check the LICENSE file in each project for more details.
+    <script type="module">
+        import quest from '@dev-dae/quest-js';
+        
+        quest({
+            members: '.dot',
+            start: '.start',
+            end: '.end',
+            duration: 2000,
+            colors: ['#blue', '#green', '#red']
+        });
+    </script>
+</body>
+</html>
+```
 
-## My Website
+## API Reference
 
-For a more curated experience and in-depth insights about my work and interests, check out my personal website at [devicarus.com](https://devicarus.com).
+### quest(options)
 
-## Stay Connected
+The main function to create animations.
 
-I love to connect with fellow developers and tech enthusiasts. Follow me on GitHub to stay updated with my latest projects. For real-time updates and professional networking, connect with me on [LinkedIn](https://www.linkedin.com/in/ellis-hogan-99a646161) or [GitHub](https://github.com/icarus612).
+#### Parameters
 
-Thank you for visiting, and happy coding!
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `start` | string/Element | **required** | Selector or element defining the starting position |
+| `end` | string/Element | **required** | Selector or element defining the ending position |
+| `members` | string/Element/Array | `[]` | Individual elements to animate |
+| `parties` | string/Element/Array | `[]` | Parent elements whose children will be animated |
+| `duration` | number | `2000` | Animation duration in milliseconds |
+| `pace` | number | `1` | Stagger timing multiplier (0-1 for faster, >1 for slower) |
+| `path` | string | `'cubic'` | Animation easing type: `'linear'` or `'cubic'` |
+| `split` | string/boolean | `'x'` | Split animation control: `'x'`, `'y'`, or `false` |
+| `singleton` | boolean | `false` | Whether selectors should return single elements |
+| `colors` | Array | `[]` | Array of colors to transition through |
+
+### Animation Paths
+
+#### Linear Path (`path: 'linear'`)
+Elements move in straight lines with constant velocity. When combined with split animations, creates L-shaped movements.
+
+#### Cubic Path (`path: 'cubic'`)
+Elements move with cubic easing (slow start, fast middle, slow end). The split axis uses cubic easing while the other uses linear.
+
+### Split Animation
+
+Split animations allow you to control X and Y movement independently:
+
+- `split: 'x'` - X-axis uses the specified easing, Y-axis is linear
+- `split: 'y'` - Y-axis uses the specified easing, X-axis is linear  
+- `split: false` - Both axes move together with the specified easing
+
+```javascript
+// Create an L-shaped movement (horizontal then vertical)
+quest({
+    members: '.dots',
+    start: '.start',
+    end: '.end',
+    path: 'linear',
+    split: 'y'  // Y movement is delayed, creating L-shape
+});
+```
+
+### Members vs Parties
+
+- **Members**: Individual elements that will be animated directly
+- **Parties**: Container elements whose children will be animated
+
+```javascript
+quest({
+    members: '.individual-dot',  // Animates these specific elements
+    parties: '.dot-container',   // Animates all children of these containers
+    start: '.start',
+    end: '.end'
+});
+```
+
+## Examples
+
+### Basic Linear Animation
+
+```javascript
+quest({
+    members: '.dot',
+    start: '.start-point',
+    end: '.end-point',
+    duration: 1500,
+    path: 'linear'
+});
+```
+
+### Staggered Cubic Animation with Colors
+
+```javascript
+quest({
+    members: '.particle',
+    start: '.origin',
+    end: '.destination',
+    duration: 2000,
+    path: 'cubic',
+    pace: 0.5,  // Faster stagger
+    colors: ['#ff0000', '#00ff00', '#0000ff']
+});
+```
+
+### L-Shaped Movement
+
+```javascript
+quest({
+    parties: '.dot-group',
+    start: '.corner-start',
+    end: '.corner-end',
+    path: 'linear',
+    split: 'y',  // Move horizontally first, then vertically
+    duration: 1000
+});
+```
+
+### Complex Multi-Group Animation
+
+```javascript
+// Animate multiple groups with different timing
+quest({
+    members: '.group-a .dot',
+    start: '.start-a',
+    end: '.end-a',
+    duration: 1000,
+    split: 'x'
+});
+
+quest({
+    members: '.group-b .dot',
+    start: '.start-b', 
+    end: '.end-b',
+    duration: 1500,
+    path: 'cubic',
+    split: false
+});
+```
+
+## Browser Support
+
+Quest.js requires ES6 module support and works with:
+- Chrome 61+
+- Firefox 60+
+- Safari 10.1+
+- Edge 16+
+
+## Dependencies
+
+- [Anime.js](https://animejs.com/) v4.0.2+
+
+## License
+
+MIT
+
+## Contributing
+
+Issues and pull requests are welcome on [GitHub](https://github.com/icarus612/quest-js).
 
 ---
 
-© 2024 dev.icarus - All Rights Reserved.
+*Quest.js - Bringing elements together, one animation at a time.*
