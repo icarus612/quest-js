@@ -2,8 +2,11 @@ name: Reversion
 
 on:
   push:
-    branches:
-      - main 
+    branches: [main] 
+  pull_request:
+    types: [closed]
+    branches: [main]
+
 jobs:
   publish:
     runs-on: ubuntu-latest
