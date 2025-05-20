@@ -186,7 +186,6 @@ const quest = ({
       element,
       index,
       partyTotal,
-      container,
       xMovement,
       yMovement,
       duration,
