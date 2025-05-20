@@ -1,6 +1,6 @@
-import { animate, stagger, utils, createTimeline } from 'animejs';
+import { animate } from 'animejs';
+import { stagger, utils, createTimeline } from 'animejs';
 
-// Animation pattern generators
 const $ = (selector, singleton = false) => singleton ? document?.querySelector(selector) : [...document?.querySelectorAll(selector)];
 const parseEl = (selector, singleton = false) => typeof selector === 'string' ? $(selector, singleton) : selector;
 const makeArray = (val) => Array.isArray(val) ? val : [val];
@@ -22,32 +22,35 @@ const getPositionFromSelector = (target, element) => {
   ];
 }
 
-const checkPattern = (pattern) => {
-  switch (pattern) {
+const createSplitAnimation = (path) => {
+  switch (path) {
     case 'linear':
       return createLinearAnimation;
-      case 'cubic':
-      default:
-        return createCubicAnimation;
+    case 'cubic':
+    default:
+      return createCubicAnimation;
   }
 }
 
-const createCubicAnimation = (
-  timeline,
-  settings,
-) =>{
-  const {
-    element,
-    xMovement,
-    yMovement,
-    duration,
-    index,
-    split,  
-    partyTotal,
-  } = settings;
-  const staggerDelay = calculateStaggeredDelay(index, partyTotal, duration);
+const getDefaultEase = (path) => {
+  switch (path) {
+    case 'cubic':
+      return 'inOutCubic';
+    case 'linear':
+    default:
+      return 'linear';
+  }
+}
+
+const createCubicAnimation = ({
+  xMovement,
+  yMovement,
+  split,
+}) => {
+  // Small helper function with but loses encapsulation with split variable.
   const checkSplit = (dim) => dim === split ? 'inOutCubic' : 'linear';
-  timeline.add(element, {
+
+  return {
     x: {
       to: xMovement,
       ease: checkSplit('x'),
@@ -56,103 +59,120 @@ const createCubicAnimation = (
       to: yMovement,
       ease: checkSplit('y'),
     },
-    fill: colors,
-    backgroundColor: colors,
-  }, staggerDelay);
+
+  };
 }
 
+const buildFromLinearSplit = ({
+  isSplit,
+  movement,
+  duration,
+  staggerDelay,
+  totalDistance
+}) => {
+  const thisDistance = Math.abs(movement[1] - movement[0]);
+  const newDuration = Math.round(duration * thisDistance / totalDistance);
+  const remainingDuration = duration - newDuration;
 
-const createLinearAnimation = (
-  timeline,
-  settings,
-) =>{
-  const {
-    element,
-    xMovement,
-    yMovement,
-    duration,
-    index,
-    partyTotal,
-  } = settings;
-  const staggerDelay = calculateStaggeredDelay(index, partyTotal, duration);
-  timeline.add(element, {
-    x: {
-      to: xMovement,
+  if (isSplit) {
+    return {
+      to: movement,
       ease: 'linear',
-    },
-    y: {
-      to: yMovement,
+      duration: newDuration,
+      delay: staggerDelay + remainingDuration / 2,
+    };
+  } else {
+    const midpoint = movement[1] / 2;
+    return [{
+      to: [movement[0], midpoint],
       ease: 'linear',
+      duration: newDuration / 2,
+      delay: staggerDelay,
     },
-    fill: colors,
-    backgroundColor: colors,
-  }, staggerDelay);
-}
-
-const createColorAnimation = (colors, duration) => {
-  return colors.map((color, index) => ({
-    value: color,
-    duration: duration / colors.length,
-    ease: 'linear',
-    delay: index === 0 ? stagger(duration / 4) : duration / colors.length
-  }));
-}
-
-const animateElement = (props) => {
-  const {
-    split,
-    pattern,
-    index, 
-    duration,
-    partyTotal,
-    xMovement,
-    yMovement,
-    element,
-    colors,
-  } = props;
-
-  const timeline = createTimeline({ defaults: { loop: true } });
-  
-  const settings = {
-    ...props,
-    stagger: calculateStaggeredDelay(index, partyTotal, duration)
+    {
+      to: [midpoint, movement[1]],
+      ease: 'linear',
+      duration: newDuration / 2,
+      delay: remainingDuration,
+    }];
   }
+}
+
+const createLinearAnimation = ({
+  xMovement,
+  yMovement,
+  duration,
+  staggerDelay,
+  split,
+}) => {
+  const totalDistance = Math.abs(xMovement[1] - xMovement[0]) + Math.abs(yMovement[1] - yMovement[0]);
+  const checkSplit = (isSplit, movement) => buildFromLinearSplit({ isSplit, movement, duration, staggerDelay, totalDistance })
+  let x = checkSplit('x' === split, xMovement);
+  let y = checkSplit('y' === split, yMovement);
+  console.log({x, y});
+  return { x, y };
+}
+
+const animateElement = ({
+  element,
+  split,
+  path,
+  index,
+  pace,
+  duration,
+  partyTotal,
+  xMovement,
+  yMovement,
+  colors,
+}) => {
+  const staggerDelay = ((duration * pace) / partyTotal) * index;
+  const settings = {
+    split,
+    xMovement,
+    yMovement,
+    duration,
+    staggerDelay,
+  }
+  let x = xMovement;
+  let y = yMovement;
 
   if (split) {
-    const animationPattern = checkPattern(pattern);
-    animationPattern(timeline, settings);
-  } else {
-    timeline.add(element, {
-      translateX: xMovement,
-      translateY: yMovement,
-      fill: colors,
-      backgroundColor: colors,
-    }, );
+    const splitAnimation = createSplitAnimation(path)(settings);
+    x = splitAnimation.x;
+    y = splitAnimation.y;
   }
-}
 
-function calculateStaggeredDelay(index, totalElements, duration) {
-  return (duration * 2.5) / totalElements * index;
-}
-
-const quest = (options) => {
-  const {
-    members = [],
-    parties = [],
-    start,
-    end,
+  animate(element, {
+    x,
+    y,
     duration,
-    pattern = 'cubic',
-    split = 'x',
-    singleton = false,
-    colors = ['#000', '#555']
-  } = options;
+    fill: colors,
+    ease: getDefaultEase(path),
+    backgroundColor: colors,
+    delay: staggerDelay,
+    loop: true,
+  });
+
+}
+
+const quest = ({
+  start,
+  end,
+  members = [],
+  parties = [],
+  duration = 2000,
+  pace = 1,
+  path = 'cubic',
+  split = 'x',
+  singleton = false,
+  colors = []
+}) => {
 
   const finalParty = [
     ...makeArray(members)?.flatMap((member) => parseEl(member, singleton)),
-    ...makeArray(parties)?.flatMap((party) => parseEl(party, singleton).flatMap((el)=> [...el.children]))
+    ...makeArray(parties)?.flatMap((party) => parseEl(party, singleton).flatMap((el) => [...el.children]))
   ]
-  
+
   const startEl = parseEl(start, true);
   const endEl = parseEl(end, true);
 
@@ -161,18 +181,20 @@ const quest = (options) => {
     const endPos = getPositionFromSelector(endEl, element);
     const xMovement = [startPos[0], endPos[0]];
     const yMovement = [startPos[1], endPos[1]];
-    
+    const partyTotal = finalParty.length;
+
     animateElement({
       element,
       index,
-      partyTotal: finalParty.length,
+      partyTotal,
       container,
       xMovement,
       yMovement,
       duration,
-      pattern,
+      path,
       split,
-      colors
+      colors,
+      pace,
     });
   });
 }
