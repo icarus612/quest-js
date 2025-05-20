@@ -2,6 +2,10 @@
 
 A lightweight JavaScript animation library for creating smooth element transitions along paths between two points. Built on top of Anime.js, Quest.js specializes in orchestrating group animations with customizable movement patterns and staggered timing.
 
+[View Repo](https://github.com/icarus612/quest-js) | [Report Issues](https://github.com/icarus612/quest-js/issues)
+
+
+
 ## Features
 
 - **Path-based animations**: Move elements from one point to another with linear or cubic easing
