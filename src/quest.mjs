@@ -152,7 +152,6 @@ const animateElement = ({
     delay: staggerDelay,
     loop: true,
   });
-
 }
 
 const quest = ({
