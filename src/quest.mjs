@@ -71,34 +71,29 @@ const buildFromLinearSplit = ({
   totalDistance
 }) => {
   const thisDistance = Math.abs(movement[1] - movement[0]);
-  const remainingDistance = totalDistance - thisDistance;
-  const getDurration = (distance) => (duration * distance) / totalDistance;
-
-  const nonSplitDuration = getDurration(thisDistance);
-  const splitDuration = duration * (remainingDistance / totalDistance);
-
-  console.log({duration, nonSplitDuration, splitDuration});
+  const newDuration = Math.round(duration * thisDistance / totalDistance);
+  const remainingDuration = duration - newDuration;
 
   if (isSplit) {
     return {
       to: movement,
       ease: 'linear',
-      duration: splitDuration,
-      delay: staggerDelay + (nonSplitDuration / 2),
+      duration: newDuration,
+      delay: staggerDelay + remainingDuration / 2,
     };
   } else {
     const midpoint = movement[1] / 2;
     return [{
       to: [movement[0], midpoint],
       ease: 'linear',
-      duration: splitDuration,
+      duration: newDuration / 2,
       delay: staggerDelay,
     },
     {
       to: [midpoint, movement[1]],
       ease: 'linear',
-      duration: splitDuration,
-      delay: nonSplitDuration,
+      duration: newDuration / 2,
+      delay: remainingDuration,
     }];
   }
 }
@@ -114,6 +109,7 @@ const createLinearAnimation = ({
   const checkSplit = (isSplit, movement) => buildFromLinearSplit({ isSplit, movement, duration, staggerDelay, totalDistance })
   let x = checkSplit('x' === split, xMovement);
   let y = checkSplit('y' === split, yMovement);
+  console.log({x, y});
   return { x, y };
 }
 
