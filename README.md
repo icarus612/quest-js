@@ -76,11 +76,11 @@ Elements move with cubic easing (slow start, fast middle, slow end). The split a
 
 ### Split Animation
 
-Split animations allow you to control X and Y movement independently:
+The "split" property describes which axis the animation visually splits at the mid-way point:
 
-- `split: 'x'` - X-axis uses the specified easing, Y-axis is linear
-- `split: 'y'` - Y-axis uses the specified easing, X-axis is linear  
-- `split: false` - Both axes move together with the specified easing
+- `split: 'x'` - Halfway through animating the y-axis the x-axis is fully animated, then the y-axis finishes.
+- `split: 'y'` - Halfway through animating the x-axis the y-axis is fully animated, then the x-axis finishes.
+- `split: false` - Both axes move together with the specified easing on a diagnal.
 
 ```javascript
 // Create an L-shaped movement (horizontal then vertical)
