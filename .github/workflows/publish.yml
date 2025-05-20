@@ -26,7 +26,9 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
-      
+      - name: Build Package
+        run: npm run build
+          
       - name: Authenticate with npm
         run: npm config set //registry.npmjs.org/:_authToken "${NODE_AUTH_TOKEN}"
         env:

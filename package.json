@@ -2,14 +2,27 @@
   "name": "@dev-dae/quest-js",
   "version": "2.0.6",
   "description": "Animation library for creating curved path animations",
-  "main": "src/quest.mjs",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
   "directories": {
     "example": "example"
   },
   "dependencies": {
     "animejs": "^4.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/icarus612/quest-js.git"
@@ -22,13 +35,14 @@
   "homepage": "https://github.com/icarus612/quest-js#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx serve -l 3000 --cors"
+    "dev": "npx serve -l 3000 --cors",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "prepare": "npm run build"
   },
   "publishConfig": {
     "access": "public"
-  },
-  "files": [
-    "src/quest.mjs",
-    "src/quest.js"
-  ]
+  }
 }
