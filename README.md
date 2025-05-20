@@ -11,65 +11,39 @@ A lightweight JavaScript animation library for creating smooth element transitio
 - **Color transitions**: Smoothly transition colors during movement
 - **Looping animations**: Built-in support for repeating animations
 
-## Installation
+## Quick Start
+
+### Basic Installation
+
+To use the library in your own project:
 
 ```bash
 npm install @dev-dae/quest-js
 ```
 
-## Quick Start
+### Downloading the Repo
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        .dot {
-            width: 10px;
-            height: 10px;
-            position: absolute;
-            background-color: black;
-            border-radius: 50%;
-        }
-        .start, .end {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-        .start { 
-            top: 10px; 
-            left: 10px; 
-            background-color: blue; 
-        }
-        .end { 
-            top: 300px; 
-            left: 500px; 
-            background-color: red; 
-        }
-    </style>
-</head>
-<body>
-    <div class="start"></div>
-    <div class="end"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+Clone the project run the included examples:
 
-    <script type="module">
-        import quest from '@dev-dae/quest-js';
-        
-        quest({
-            members: '.dot',
-            start: '.start',
-            end: '.end',
-            duration: 2000,
-            colors: ['#blue', '#green', '#red']
-        });
-    </script>
-</body>
-</html>
+1. Clone the repository
+```bash
+git clone https://github.com/icarus612/quest-js.git
+cd quest-js
 ```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Run the development server
+```bash
+npm run dev
+```
+
+This will start a local server on port 3000 and serve the example.html file, which demonstrates various animation patterns and usages of Quest.js.
+
+You can examine the example.html file in the examples directory to see practical implementations of the library.
 
 ## API Reference
 
@@ -83,10 +57,10 @@ The main function to create animations.
 |-----------|------|---------|-------------|
 | `start` | string/Element | **required** | Selector or element defining the starting position |
 | `end` | string/Element | **required** | Selector or element defining the ending position |
-| `members` | string/Element/Array | `[]` | Individual elements to animate |
-| `parties` | string/Element/Array | `[]` | Parent elements whose children will be animated |
+| `members` | string/Element/Array | `[]` | Individual elements to animate (animates before parties) |
+| `parties` | string/Element/Array | `[]` | Parent elements whose children will be animated (animates after members) |
 | `duration` | number | `2000` | Animation duration in milliseconds |
-| `pace` | number | `1` | Stagger timing multiplier (0-1 for faster, >1 for slower) |
+| `pace` | number | `1` | Stagger timing multiplier (*note: when pace < 1 there will be an uneven gap between the last element end and first element restart) |
 | `path` | string | `'cubic'` | Animation easing type: `'linear'` or `'cubic'` |
 | `split` | string/boolean | `'x'` | Split animation control: `'x'`, `'y'`, or `false` |
 | `singleton` | boolean | `false` | Whether selectors should return single elements |
