@@ -12,8 +12,8 @@
 				height: 100vh;
 			}
 
-			.h300px {
-				height: 300px;
+			.h500px {
+				height: 500px;
 			}
 
 			.dot {
@@ -51,7 +51,7 @@
 			<div class="pb-5 color-change-bg overflow-hidden">
 				<div class="pb-5 container">
 					<div class="d-flex flex-row align-items-center flex-wrap" id="container">
-						<div class="col-12 h300px">
+						<div class="col-12 h500px">
 							<div id="mv1">
 								<div class="start">1</div>
 								<div class="end">1</div>
@@ -62,7 +62,7 @@
 								<div class="dot"></div>
 							</div>
 						</div>
-						<div class="col-12 h300px">
+						<div class="col-12 h500px">
 							<div id="mv2">
 								<div class="start">2</div>
 								<div class="end">2</div>
@@ -73,7 +73,7 @@
 								<div class="dot"></div>
 							</div>
 						</div>
-						<div class="col-12 h300px">
+						<div class="col-12 h500px">
 							<div id="mv3">
 								<div class="start">3</div>
 								<div class="end">3</div>
@@ -104,9 +104,9 @@
 					members: '#mv1 .dot',
 					start: '#mv1 .start',
 					end: '#mv1 .end',
-					duration: 1000,
-					curve: "cubic",
-					split: 'x',
+					duration: 10000,
+					path: "linear",
+					split: 'y',
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
 				
@@ -115,7 +115,7 @@
 					start: '#mv2 .start',
 					end: '#mv2 .end',
 					duration: 1000,
-					curve: "cubic",
+					path: "cubic",
 					split: 'y',
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
@@ -125,7 +125,7 @@
 					start: '#mv3 .start',
 					end: '#mv3 .end',
 					duration: 1000,
-					curve: "linear",
+					path: "linear", //better name needed
 					split: false,
 					color: ["#009de4", "#06f3a0", "#f30659"]
 				});
