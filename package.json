@@ -1,5 +1,5 @@
 {
-  "name": "@dev-dae/quest-js",
+  "name": "lib.javascript.node.dots-js",
   "version": "2.0.7",
   "description": "Animation library for creating curved path animations",
   "type": "module",
